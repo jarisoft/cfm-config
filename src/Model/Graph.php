@@ -98,7 +98,6 @@ class Graph
             // Fetch all edges and check if current node is in the toNodeId but not in the fromNodeId.
             $isParent = false;
             $isChild  = false;
-
             /** @var Edge $edge */
             foreach ($this->edges as $edge) {
                 if ($node->getId() == $edge->getFromNodeId()) {
@@ -114,7 +113,6 @@ class Graph
                 $leafNodes[] = $node;
             }
         }
-
         return $leafNodes;
     }
 
@@ -133,11 +131,13 @@ class Graph
         foreach ($this->getRootNodes() as $rootNode) {
             if (!$this->findCirclesByNodeId($rootNode->getId())) {
 
-                $pathLengh = $this->getPathLength($rootNode->getId(), 0);
+                $pathLength = $this->getPathLength($rootNode->getId(), 0);
 
-                if ($maxPathLength < $pathLengh) {
-                    $maxPathLength = $pathLengh;
+                if ($maxPathLength < $pathLength) {
+                    $maxPathLength = $pathLength;
                 }
+            } else {
+                throw new \Exception('Graph has at least one circular path. Cannot determine max depth.');
             }
         }
 
@@ -185,7 +185,8 @@ class Graph
     }
 
     /**
-     * Checks whether a node with given nodeId is a leaf.
+     * Checks whether a node with given nodeId is a leaf. A leaf is per definition a
+     * node that has at least one parent but no children.
      *
      * @param int $nodeId
      * @return bool
@@ -248,8 +249,9 @@ class Graph
     }
 
     /**
-     * Finds all circular paths starting from the root nodes.
-     * The returned array only stores the IDs of the nodes.
+     * Finds all circular paths for each node in the graph.
+     * The returned array only stores the IDs of the nodes that belong
+     * to the path that describes a circle.
      *
      * @return array
      */
@@ -310,8 +312,8 @@ class Graph
 
         // Add current nodeId to the set of already visited node IDs and recursively
         // check sub paths.
-        $visited[] = $nodeId;
         foreach ($this->findChildrenEdges($nodeId) as $edge) {
+            $visited[] = $nodeId;
             $visited = $this->findCirclesByNodeId($edge->getToNodeId(), $visited);
         }
 

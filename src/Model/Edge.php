@@ -10,22 +10,23 @@ namespace App\Model;
  */
 class Edge
 {
-    /** @var int */
+    /** @var mixed */
     private $fromNodeId;
-    /** @var int */
+    /** @var mixed */
     private $toNodeId;
 
     /**
-     * Edge constructor must be defined by two non zero integers.
+     * Edge constructor must be defined by two non null primitive typed
+     * identifiers.
      *
-     * @param int $from the id of the outgoing node
-     * @param int $to the id of the incoming node
+     * @param mixed $from the id of the outgoing node
+     * @param mixed $to the id of the incoming node
      * @throws \Exception
      */
     public function __construct($from, $to)
     {
-        if (0 === $from * $to) {
-            throw new \Exception('The IDs of both nodes must not be 0', 500);
+        if (null == $from || null == $to) {
+            throw new \Exception('The IDs of both nodes must not be null', 500);
         }
 
         $this->fromNodeId = $from;
@@ -33,17 +34,17 @@ class Edge
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getFromNodeId()
+    public final function getFromNodeId()
     {
         return $this->fromNodeId;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getToNodeId()
+    public final function getToNodeId()
     {
         return $this->toNodeId;
     }
