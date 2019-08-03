@@ -9,21 +9,21 @@ namespace App\Model;
  */
 class Node
 {
-    /** @var int */
+    /** @var mixed */
     private $id;
 
     /**
      * Node constructor requires an identifier that must be unique across a graph.
      *
-     * @param int $id
+     * @param mixed $id
      */
-    public function __construct(int $id)
+    public function __construct($id)
     {
         $this->id = $id;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
     public function getId()
     {
